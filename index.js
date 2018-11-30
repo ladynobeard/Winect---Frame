@@ -30,8 +30,8 @@ var sendAllBodies = false;
 var X = 0.0;
 var Y = 0.0;
 var Z = 0.0;
-var scaleZ =1;
-var scalePow = 0.01;
+var scaleZ =.2;
+var scalePow = 0.001;
 var startSec = 30;
 var handPos = [];
 
@@ -52,9 +52,14 @@ window.addEventListener('load', init);
  * Then it calls the object myWindow to be setup for aws listeners
  */
 function init() {
-  window.scrollTo($(window).width()/2, $(window).height()/2);
-  chooseCamera();
-  myWindow.setup();
+
+	window.scrollTo($(window).width()/2, $(window).height()/2);
+	
+	localStorage.setItem('width',$(window).width()); 
+	localStorage.setItem('height',$(window).height()); 
+	
+	chooseCamera();
+	myWindow.setup();
 }
 
 // Listener for IoT event
@@ -73,7 +78,6 @@ myWindow.onMessage(function(topic, payload) {
 			setLiveVideoLink(payloadArray);
 			liveVideoLoadandPlay();
 			liveVid = 1;
-			console.log("it's a live!");
 		}
 		else if (getLive == 0){ // video is not live
 			videoLoadandPlay();
@@ -118,11 +122,6 @@ function isLive(payloadArray)
 		{
 			if(liveVideos[j].label.includes(payloadArray[i]))
 			{
-				videoLinkNum = Math.floor(Math.random() * liveVideos[j].links.length);
-				videosPos = liveVideos[j].pos;
-				videoLink = liveVideos[j].links[videoLinkNum];
-				//videoLoadandPlay();
-				//break;
 				return 1;
 			}			
 		}
@@ -160,13 +159,17 @@ function setLiveVideoLink(payloadArray)
  */
 function updateWindowScroll(X,Y,Z)
 {
-	var rect = document.getElementById("player").getBoundingClientRect();
-	//if(((rect.top + Math.abs(2*Y*100*(Z*Math.pow(scaleZ*Z,scalePow))))*(((Z*Math.pow(scaleZ*Z,scalePow)))) < -15) )
-	{
-		window.scrollTo((playerWidth-$(window).width())/2 + X*100*(Z*Math.pow(scaleZ*Z,scalePow)),(playerHeight-$(window).height())/2 - Y*100*(Z*Math.pow(scaleZ*Z,scalePow)));
-		document.getElementById("player").style.transform="translateZ("+String((100*Z*Math.pow(scaleZ*Z,scalePow)))+"px)";
-		console.log("translateZ("+String((100*Z*Math.pow(scaleZ*Z,scalePow)))+"px)");
-	}
+	document.getElementById("player_wrapper").style.transform="perspective("+ String((Z*Math.pow(scaleZ*Z,scalePow))+4)+"cm)"+
+															  "translate3d("+ String(X*100*(Z*Math.pow(scaleZ*Z,scalePow)))+"px," 
+																			+ String(-1*Y*100*(Z*Math.pow(scaleZ*Z,scalePow)))+"px, "
+																			+ String((Z*Math.pow(scaleZ*Z,scalePow)))+"cm)";
+	// Pass to frame
+	localStorage.setItem('X',X);
+	localStorage.setItem('Y',Y);
+	localStorage.setItem('Z',Z);
+	console.log("translate3d("+ String(X*100*(Z*Math.pow(scaleZ*Z,scalePow)))+"px," 
+																			+ String(-1*Y*100*(Z*Math.pow(scaleZ*Z,scalePow)))+"px, "
+																			+ String((Z*Math.pow(scaleZ*Z,scalePow)))+"cm)");
 }
 
 /*
@@ -213,6 +216,7 @@ function onPlayerStateChange(event) {
 
 // Fade in and Fade out animation for when the video is changed
 function videoLoadandPlay(){
+	console.log(videoLink);
 	$('#player').fadeOut(1000,function(){					
 		player.loadVideoById({'videoId': videoLink,
 			 'suggestedQuality': 'highres',
@@ -227,7 +231,7 @@ function videoLoadandPlay(){
 // Fade in and Fade out animation for when the live video is changed
 function liveVideoLoadandPlay(){
 	$('#player').fadeOut(1000,function(){	
-	    document.getElementById('player').src = videoLink;//"http://100.80.228.103:8000/index.html"; //videoLink;  
+	    document.getElementById('player').src = videoLink;  
 		player.playVideo();	
 		$('#player').fadeIn(1000);
 	});

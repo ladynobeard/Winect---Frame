@@ -5,22 +5,32 @@
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
     <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.3.1.min.js"></script>
+	<script src="./node_modules/three/build/three.min.js"></script>
+	
     <script language="JavaScript" type="text/javascript" src="index.js"></script>
     <script language="JavaScript" type="text/javascript" src="titles.js"></script>
+	<link rel="stylesheet" href="styles.css">
 	
   </head>
   <body id="body">
+		
+	<div id="parent_frame">
+		<div id="frame_wrapper">
+			<div id="frame"> 
+				<script language="JavaScript" type="text/javascript" src="three.js"></script>
+			</div>			
+		</div>
+	</div>
 	
-    <!-- 1. The <iframe> (and video player) will replace this <div> tag. -->
-    <div id="player"></div>
-    <style type="text/css">
-
-    body{
-      overflow: hidden;
-      //overflow:scroll;
-	  margin: 0;
-    }
-
-    </style>
+	<!-- 1. The <iframe> (and video player) will replace this <div> tag. -->
+	<div id="parent_player">
+		<div id="player_wrapper">
+			<div id="player"></div>
+		</div>			
+	</div>	
+	
   </body>
+  
 </html>
+
+

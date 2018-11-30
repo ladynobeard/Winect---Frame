@@ -1,0 +1,24 @@
+body{
+	overflow: hidden;
+	//overflow:scroll;
+	margin: 0;
+	position:relative;
+}	
+#parent_player{
+	position: absolute;
+	z-index: 1;
+    left: 0; 
+    top: 0;
+	overflow: hidden;
+	margin: 0px;
+}
+#parent_frame{
+	position: absolute;
+	z-index: 2;
+    left: 50vw; 
+    top: 50vh;
+	width: 100vw;	
+	height: 100vh;
+	overflow: hidden;
+	margin: 0px;
+}
